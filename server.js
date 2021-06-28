@@ -6,7 +6,7 @@ const { ExpressPeerServer } = require('peer');
 const peerServer = ExpressPeerServer(server, {
   debug: true
 });
-// app.use(require('cors')())
+app.use(require('cors')())
 const { v4: uuidv4} = require('uuid');
 
 
@@ -26,17 +26,16 @@ app.get('/:room', (req, res) => {
 io.on('connection', socket =>{
     socket.on('join-room', (roomID, userID) => {
         socket.join(roomID);
-        // io.sockets.in(roomID).emit('user-connected', userID);
-        // socket.to(roomID).broadcast.emit('user-connected', userID); 
+
         socket.broadcast.to(roomID).emit('user-connected', userID); 
-        // change io to socket later on
-        //check because broadcast not working
+        socket.on('message', (message)=>{
+            io.to(roomID).emit('createMessage', message);
+        })
 
+        socket.on('disconnect', (roomID, userID)=>{
+            socket.broadcast.to(roomID).emit('user-disconnected', userID); 
 
-        // socket.on('disconnect', (roomID, userID)=>{
-        //     // socket.to(roomID).emit('user-disconnected', userID)
-        //     io.sockets.in(roomID).emit('user-disconnected', userID)
-        // })
+        })
     })
     
 })

@@ -8,17 +8,72 @@
     <link rel="stylesheet" href="style.css">
     <script src = "/socket.io/socket.io.js"></script>
     <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/67e4f2d0dd.js" crossorigin="anonymous"></script>
     <script>
         const room_id = "<%= roomID %>"
     </script>
 </head>
 <body>
-    <!-- Hello Guys! This is room <%= roomID %> -->
-    <div id = "video-grid">
-
+<div class="main">
+    <div class="main-left">
+        <div class="main-videos">
+            <div id = "video-grid">
+                
+            </div>
+        </div>
+        <div class ="controls">
+            <div class = "controls-block">
+                <div class="controls-button live-time" onclick="show_time()">
+                    <!-- <span>Live Time</span> -->
+                </div>
+            </div>
+            <div class = "controls-block">
+                <div class="controls-button mute-button" onclick="muteToggle()">
+                    <i class="fas fa-microphone"></i>
+                    <!-- <span>Mic</span> -->
+                </div>
+                <!-- <div class="controls-button video-button"> -->
+                <div class="controls-button video-button" onclick="videoToggle()">
+                    <i class="fas fa-video"></i>
+                    <!-- <span>Video</span> -->
+                </div>
+                <div class="controls-button chat_button" onclick="openCloseChat()">
+                    <!-- <i class="far fa-comment-dots"></i> -->
+                    <i class="fas fa-comment-dots"></i>                
+                    <!-- <span>Share</span> -->
+                </div>
+            </div>
+            <div class = "controls-block">
+                <div class="controls-button">
+                    <!-- <i class="fas fa-sign-out-alt"></i> -->
+                    <button type="button" class="btn btn-danger">Leave Meeting</button>
+                </div>
+            </div>
+        </div>
+    </div>    
+    
+    <div class = "main-middle">
+        <div class="middle-header">Participants</div>
     </div>
+    
+    <div class = "main-right">
+        <div class="right-header">Chat</div>
+        <!-- <hr> -->
+        <audio src="sounds/message.mp3" id="message-sound"></audio>
+        <div class="chat-window">
+            <ul class="messages">
 
-
+            </ul>
+        </div>
+        <div class="message-container">
+            <input type="text" placeholder="Type here..." id="chat-message">
+        </div>
+    </div>
+    
+</div>
     <script src = "script.js"></script>
 </body>
 
