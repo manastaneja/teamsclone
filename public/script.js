@@ -5,33 +5,32 @@ const myPeer = new Peer(undefined, {
     host: '/',
     port: '3030'
 })
+//LIVE TIME
 $(document).ready(()=>{
     setInterval(()=>{
         var today = new Date();
-        if(today.getSeconds()<10){
-            var time = today.getHours() + ":" + today.getMinutes() + ":0" + today.getSeconds();
-        } else{
-            var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        let min = today.getMinutes();
+        let sec = today.getSeconds();
+        let hours = today.getHours();
+        if(min<10){
+            min = "0" + min;
         }
+        if(sec<10){
+            sec = "0" + sec;
+        }
+        if(hours<10){
+            hours = "0" + hours;
+        }
+        var time = hours + ":" + min + ":" + sec;
         const html = `${time}`;
         document.querySelector('.live-time').innerHTML = html;
     }, 1000);
 })
-// const show_time = () => {
-//     var today = new Date();
-//     var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-//     const html = `${time}`;
-//     document.querySelector('.live-time').innerHTML = html;
-//     console.log(time);
-// }
-// FOR CURRENT TIME 
-// var today = new Date();
-// var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 let myVideoStream
 // let userVideoStream
 const myVideo = document.createElement('video');
 myVideo.muted = true // change
-const peers = {}
+const peers = {};
 navigator.mediaDevices.getUserMedia({
     video: true,
     audio: true
@@ -52,31 +51,81 @@ navigator.mediaDevices.getUserMedia({
     socket.on('user-connected', userID => {
         setTimeout(()=>{connectToNewUser(userID, stream)}, 1000);
     })
+    socket.on('user-disconnected', userID => {
+        setTimeout(()=>{console.log("disconnected....")}, 6000);
+        // if(peers[userID]) peers[userID].close();
+        // connectToNewUser(userID, stream);
+        // video.close();
+    })
     //CHAT 
     let msg = $('input');
     $('html').keydown((e)=>{
         if((e.which == 13 && msg.val().length!==0)){
             // console.log(msg.val());
-            socket.emit('message', msg.val());
+            msg1 = `${username}` + msg.val();
+            socket.emit('message', msg1);
             msg.val('');
             message_sound();
         }
     })
     socket.on('createMessage', (message)=>{
         // console.log('this is from server', message);
-        $('ul').append(`<li class = "message"><b>User</b><br>${message}</li>`);
+        $('ul').append(`<li class = "message"><b>${username}</b><br>${message}</li>`);
         scrollBottom();
     })
     // socket.on('user-connected', userID => {
     //     connectToNewUser(userID, stream);
     // })
-    socket.on('user-disconnected', userID => {
-        if(peers[userID]) peers[userID].close()
-    })
+    
     
 })
+// socket.on('user-disconnected', userID => {
+//     console.log("disconnected....");
+//     // if(peers[userID]) peers[userID].close();
+//     // connectToNewUser(userID, stream);
+//     // video.close();
+// })
+// let leaveButton = document.getElementById("leaveMeeting");
+// leaveButton.onclick(()=>{
+//     socket.emit("disconnect", room_id, userID);
+//     location.href = "/home";
+// })
+const leaveMeet = () => {
+    // socket.emit("disconnect", room_id, userID);
+    socket.disconnect();
+    // socket.close();
+    location.href = "/exit";
+}
+// const leaveMeet = () => {
+//     console.log('leave meeting')
+//     socket.emit("disconnect", room_id, userID);
 
+//     const video = document.querySelector('video');
+
+//     // A video's MediaStream object is available through its srcObject attribute
+//     const mediaStream = video.srcObject;
+
+//     // Through the MediaStream, you can get the MediaStreamTracks with getTracks():
+//     const tracks = mediaStream.getTracks();
+
+//     // Tracks are returned as an array, so if you know you only have one, you can stop it with: 
+//     tracks[0].stop();
+
+//     // Or stop all like so:
+//     tracks.forEach(track => track.stop())
+//     window.close();
+//     setStopVideo()
+//     setMuteButton()
+//     document.querySelector('.main__leave_meeting').innerHTML = html;
+//   }
+
+
+// socket.on('user-disconnected', userID => {
+//     if(peers[userID]) peers[userID].close();
+// })
+let userID;
 myPeer.on('open', id=>{
+    userID = id;
     console.log("My Id: ", id);
     socket.emit('join-room', room_id, id);
 })
@@ -92,10 +141,21 @@ const connectToNewUser = (userID, stream) =>{
       addVideoStream(video, userVideoStream)
     })
     call.on('close', () => {
+        video.removeAttribute('srcObject');
         video.remove();
     })
     peers[userID] = call
 }
+// const connectToNewUserRemoveVideo = (userID, stream) => {
+//     const call = myPeer.call(userID, stream)
+//     call.on('close', () => {
+//         video.removeAttribute('srcObject');
+//         video.remove();
+//         videoElement.pause();
+//         videoElement.removeAttribute('src'); // empty source
+//         videoElement.load();
+//     })
+// }
 // adding video stream function
 const addVideoStream = (video, stream) => {
     video.srcObject = stream;
@@ -161,13 +221,38 @@ const openCloseChat = () => {
     let videoContent = document.querySelector('.main-left');
     button.classList.toggle('chat_button--active');
     if(button.classList.contains("chat_button--active")){
-        // content.style.maxHeight = content.scrollHeight + 'px';
-        content.style.display = "none";
+        videoContent.style.transition = 'flex 0.5s ease-in-out';
+        content.style.transition = 'margin 0.5s ease-in-out';
+        content.style.margin = "0% -20% 0% 0%";
         videoContent.style.flex = 0.85;
     
     } else{
+        videoContent.style.transition = 'flex 0.5s ease-in-out'; 
+        content.style.transition = 'margin 0.5s ease-in-out';
         videoContent.style.flex = 0.65;
-        content.style.display = "flex";    
-        // content.style.maxHeight = 0;
+        content.style.margin = "0% 0% 0% 0%";        
     }
 }
+const shareScreen = async () => {
+    let captureStream = null;
+  
+    try {
+      captureStream = await navigator.mediaDevices.getDisplayMedia();
+    } catch (err) {
+      console.error("Error: " + err);
+    }
+    // connectToNewUser(myUserId, captureStream);
+    myPeer.call(myUserId, captureStream);
+  };
+
+// var e = document.querySelector('.chat_button');
+//  e.onmouseover = function() {
+//    document.querySelector('.chat_popup').style.display = 'block';
+//  }
+//  e.onmouseout = function() {
+//    document.querySelector('.chat_popup').style.display = 'none';
+//  }
+
+// document.querySelector(".leaveMeeting").click(()=>{
+//     location.href = "/exit.html";
+// })
