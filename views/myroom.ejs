@@ -12,6 +12,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://kit.fontawesome.com/67e4f2d0dd.js" crossorigin="anonymous"></script>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
     <script>
         const room_id = "<%= roomID %>"
         const username = "<%= currentUser.username %>"
@@ -19,6 +20,31 @@
 </head>
 <body>
 <div class="main">
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="exampleModalLongTitle">Add People</h2>
+          <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button> -->
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                  <!-- <label for="recipient-name" class="col-form-label">Enter Email ID</label> -->
+                  <input type="text" class="form-control inviteMail" id="recipient-name" placeholder="Enter Email ID">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="sendMail()">Send Invite</button>
+        </div>
+      </div>
+    </div>
+  </div>
     <div class="main-left">
         <div class="main-videos">
             <div id = "video-grid">
@@ -40,6 +66,9 @@
                 </div>
                 <div class="controls-button chat_button" onclick="openCloseChat()">
                     <i class="fas fa-comment-dots"></i>                
+                </div>
+                <div class="controls-button addPeopleButton" data-toggle="modal" data-target="#exampleModalCenter" onclick="addPeople()">
+                    <i class="fas fa-user-plus"></i>                
                 </div>
             </div>
             <div class = "controls-block">
@@ -67,7 +96,7 @@
             </ul>
         </div>
         <div class="message-container">
-            <input type="text" placeholder="Type here..." id="chat-message">
+            <input type="text" placeholder="  Type here..." id="chat-message" class="chatMessage">
         </div>
     </div>
     

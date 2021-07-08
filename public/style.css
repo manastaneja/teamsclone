@@ -70,8 +70,7 @@ body{
     
 }
 /* #video-grid{
-    display: flex;
-    flex-direction: column;
+    justify-content: center;
 } */
 video{
     /* min-height: 200px;
@@ -80,6 +79,7 @@ video{
     max-width: 300px;
     object-fit: cover;
     transform: rotateY(180deg);
+    
 }
 
 .controls{
@@ -105,7 +105,7 @@ video{
 .controls-button i{
     font-size: 1.8rem !important;
 }
-.controls-button:hover {
+.controls-button:hover{
     background-color: #696969 !important;
     border-radius: 3px !important;
 }

@@ -5,6 +5,7 @@ const myPeer = new Peer(undefined, {
     host: '/',
     port: '3030'
 })
+// const myPeer = new Peer();
 //LIVE TIME
 $(document).ready(()=>{
     setInterval(()=>{
@@ -31,13 +32,18 @@ let myVideoStream
 const myVideo = document.createElement('video');
 myVideo.muted = true // change
 const peers = {};
+let userID;
+myPeer.on('open', id=>{
+    userID = id;
+    console.log("My Id: ", id);
+    socket.emit('join-room', room_id, id);
+})
 navigator.mediaDevices.getUserMedia({
     video: true,
     audio: true
 }).then(stream => {
     myVideoStream = stream;
     addVideoStream(myVideo, stream);
-    
     //answering the call from the user
     myPeer.on('call', call => {
         call.answer(stream)
@@ -49,28 +55,34 @@ navigator.mediaDevices.getUserMedia({
       })
     //adding the call of the new user to the stream
     socket.on('user-connected', userID => {
-        setTimeout(()=>{connectToNewUser(userID, stream)}, 1000);
+        setTimeout(()=>{connectToNewUser(userID, stream)}, 1500);
     })
     socket.on('user-disconnected', userID => {
-        setTimeout(()=>{console.log("disconnected....")}, 6000);
-        // if(peers[userID]) peers[userID].close();
+        // setTimeout(()=>{console.log("disconnected....")}, 6000);
+        console.log("disconnected....");
+        if(peers[userID]) peers[userID].close();
+        // if (document.getElementById(userID)) {
+        //     document.getElementById(userID).remove();
+        // }
+        // delete peers[userID];
         // connectToNewUser(userID, stream);
         // video.close();
     })
     //CHAT 
-    let msg = $('input');
+    let msg = $('.chatMessage');
     $('html').keydown((e)=>{
         if((e.which == 13 && msg.val().length!==0)){
             // console.log(msg.val());
-            msg1 = `${username}` + msg.val();
-            socket.emit('message', msg1);
+            // msg1 = `${username}` + msg.val();
+            
+            socket.emit('message', msg.val(), username);
             msg.val('');
             message_sound();
         }
     })
-    socket.on('createMessage', (message)=>{
+    socket.on('createMessage', (message, username)=>{
         // console.log('this is from server', message);
-        $('ul').append(`<li class = "message"><b>${username}</b><br>${message}</li>`);
+        $('ul').append(`<li class = "message"><b>${username.toUpperCase()}</b><br>${message}</li>`);
         scrollBottom();
     })
     // socket.on('user-connected', userID => {
@@ -81,7 +93,7 @@ navigator.mediaDevices.getUserMedia({
 })
 // socket.on('user-disconnected', userID => {
 //     console.log("disconnected....");
-//     // if(peers[userID]) peers[userID].close();
+//     if(peers[userID]) peers[userID].close();
 //     // connectToNewUser(userID, stream);
 //     // video.close();
 // })
@@ -91,10 +103,13 @@ navigator.mediaDevices.getUserMedia({
 //     location.href = "/home";
 // })
 const leaveMeet = () => {
-    // socket.emit("disconnect", room_id, userID);
-    socket.disconnect();
-    // socket.close();
+    socket.emit('disconnectTheUser', room_id, userID);
     location.href = "/exit";
+    
+    // socket.disconnect(); 
+    // location.href = "/exit";
+    // socket.close();
+   
 }
 // const leaveMeet = () => {
 //     console.log('leave meeting')
@@ -123,12 +138,12 @@ const leaveMeet = () => {
 // socket.on('user-disconnected', userID => {
 //     if(peers[userID]) peers[userID].close();
 // })
-let userID;
-myPeer.on('open', id=>{
-    userID = id;
-    console.log("My Id: ", id);
-    socket.emit('join-room', room_id, id);
-})
+// let userID;
+// myPeer.on('open', id=>{
+//     userID = id;
+//     console.log("My Id: ", id);
+//     socket.emit('join-room', room_id, id);
+// })
 
 // socket.on('user-connected', (userID) => {
 //     connectToNewUser(userID, stream);
@@ -137,11 +152,12 @@ const connectToNewUser = (userID, stream) =>{
     console.log("new user", userID);
     const call = myPeer.call(userID, stream)
     const video = document.createElement('video')
+    // video.setAttribute("poster","https://images.unsplash.com/photo-1543946207-39bd91e70ca7?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZnVsbCUyMGhkJTIwd2FsbHBhcGVyfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80");
     call.on('stream', userVideoStream => {
       addVideoStream(video, userVideoStream)
     })
     call.on('close', () => {
-        video.removeAttribute('srcObject');
+        // video.removeAttribute('srcObject');
         video.remove();
     })
     peers[userID] = call
@@ -159,6 +175,9 @@ const connectToNewUser = (userID, stream) =>{
 // adding video stream function
 const addVideoStream = (video, stream) => {
     video.srcObject = stream;
+    // if(stream==false){
+    //     video.setAttribute('poster', 'images/gender_neutral.png');
+    // }
     video.addEventListener('loadedmetadata', () => { /////checkkkkkkkkkkkkk
         video.play();
     })
@@ -256,3 +275,28 @@ const shareScreen = async () => {
 // document.querySelector(".leaveMeeting").click(()=>{
 //     location.href = "/exit.html";
 // })
+
+// SEND EMAIL INVITES 
+let addPeopleMail = $('.inviteMail');
+const sendMail = () => {
+    if(addPeopleMail.val().length!==0){
+    Email.send({
+        Host: "smtp.gmail.com",
+        Username: "teamsclone9@gmail.com",
+        Password: "manastaneja",
+        To: `${addPeopleMail.val()}`,
+        From: "teamsclone9@gmail.com",
+        Subject: "Teams Meeting Invite",
+        Body: `<h2>Hey!
+        You've been invited to this meeting.<br>
+        Click on the link to join now : http://localhost:3030/${room_id} <br>
+        <b>From: ${username.toUpperCase()} </b></h2>`,
+      })
+        .then(function (message) {
+          addPeopleMail.val('');
+          alert("Mail has been sent successfully")
+        });
+    } else{
+        alert("Please enter email id to send invite");
+    }    
+}

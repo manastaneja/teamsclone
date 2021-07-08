@@ -46,12 +46,18 @@ app.use(function(req,res,next){
 	res.locals.currentUser = req.user;
 	next();
 })
-
-app.get('/', (req, res) => {
+const isLoggedIn = function(req,res,next){
+	if(req.isAuthenticated()){
+		return next()
+	}else{
+		res.redirect('/login');
+	}
+}
+app.get('/', isLoggedIn ,(req, res) => {
     res.redirect(`/${uuidv4()}`);
 })
 app.get('/home', (req, res) => {
-    res.send("home page");
+    res.render("index");
 })
 
 app.get("/exit",(req,res) => {
@@ -87,7 +93,6 @@ app.get("/login",(req,res) => {
 app.post("/login",passport.authenticate("local",{
 		failureRedirect:"/home"
 	}),(req,res) => {
-	
         res.redirect(`/${uuidv4()}`);
 });
 
@@ -97,7 +102,7 @@ app.get("/logout",(req,res) => {
 	res.redirect("/home");
 })
 
-app.get('/:room', (req, res) => {
+app.get('/:room', isLoggedIn, (req, res) => {
     res.render('myroom', {roomID: req.params.room});
 })
 
@@ -106,13 +111,15 @@ io.on('connection', socket =>{
         socket.join(roomID);
 
         socket.broadcast.to(roomID).emit('user-connected', userID); 
-        socket.on('message', (message)=>{
-            io.to(roomID).emit('createMessage', message);
+        socket.on('message', (message, username)=>{
+            io.to(roomID).emit('createMessage', message, username);
         })
 
-        socket.on('disconnect', (roomID, userID)=>{
-			console.log('disconnected!');
-            socket.broadcast.to(roomID).emit('user-disconnected', userID); 
+        socket.on('disconnectTheUser', (roomID, userID)=>{
+			socket.broadcast.to(roomID).emit('user-disconnected', userID);
+            // setTimeout(()=>{socket.broadcast.to(roomID).emit('user-disconnected', userID)}, 6000);
+			console.log('disconnected!', roomID, userID); 
+			// setTimeout(()=>{io.to(roomID).emit('user-disconnected', userID)}, 6000); 
 			// io.to(roomID).emit('user-disconnected', userID);
         })
     })
