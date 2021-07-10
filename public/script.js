@@ -68,7 +68,22 @@ navigator.mediaDevices.getUserMedia({
         // connectToNewUser(userID, stream);
         // video.close();
     })
+
     //CHAT 
+    function appendMessages(message) {
+        const html = `<li class = "message"><b>${message.username.toUpperCase()}</b><br>${message.text}</li>`
+        $('ul').append(html);
+    }
+    socket.on('output-messages', data => {
+        console.log(data)
+        if (data.length) {
+            data.forEach(message => {
+                appendMessages(message)
+            });
+        }
+    })
+
+    
     let msg = $('.chatMessage');
     $('html').keydown((e)=>{
         if((e.which == 13 && msg.val().length!==0)){
@@ -80,6 +95,8 @@ navigator.mediaDevices.getUserMedia({
             message_sound();
         }
     })
+
+    
     socket.on('createMessage', (message, username)=>{
         // console.log('this is from server', message);
         $('ul').append(`<li class = "message"><b>${username.toUpperCase()}</b><br>${message}</li>`);
@@ -89,7 +106,7 @@ navigator.mediaDevices.getUserMedia({
     //     connectToNewUser(userID, stream);
     // })
     
-    
+
 })
 // socket.on('user-disconnected', userID => {
 //     console.log("disconnected....");
