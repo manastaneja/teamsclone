@@ -1,10 +1,6 @@
 const socket = io('/');
 const videoGrid = document.getElementById('video-grid');
-const myPeer = new Peer(undefined, {
-    path: '/peerjs',
-    host: '/',
-    port: process.env.PORT || 3030
-})
+const myPeer = new Peer()
 // const myPeer = new Peer();
 //LIVE TIME
 $(document).ready(()=>{
