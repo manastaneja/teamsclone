@@ -33,6 +33,29 @@
 </head>
 
 <body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- <div> -->
+    <a class="navbar-brand" href="#">Teams</a>
+    <!-- </div> -->
+    <!-- <div> -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button> 
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+        <%if(currentUser){%>
+          <a class="nav-item nav-link" href="/chat">Chat</a>
+        <%}%>
+        <%if(!currentUser){%>
+          <a class="nav-item nav-link" href="/login">Login</a>
+        <%}else{%>
+          <a class="nav-item nav-link" href="/logout">Logout</a>
+        <%}%>
+      </div>
+    </div>
+  <!-- </div> -->
+  </nav>
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -62,8 +85,8 @@
       <h1 data-aos="zoom-in">Welcome To MS Teams</h1>
       <h2 data-aos="fade-in">connecting the world</h2>
       <div class="buttons-box">
-        <a data-aos="fade-in" data-aos-delay="200" href="./" class="btn-get-started">Create Room</a>
-        <a data-aos="fade-in" data-aos-delay="200" href="" class="btn-get-started" data-toggle="modal" data-target="#exampleModalCenter">Join Room</a>
+        <a data-aos="fade-in" data-aos-delay="200" href="./" class="btn-get-started" style="text-decoration: none;">Create Room</a>
+        <a data-aos="fade-in" data-aos-delay="200" href="" style="text-decoration: none;" class="btn-get-started" data-toggle="modal" data-target="#exampleModalCenter">Join Room</a>
       </div>
       <!-- <div data-aos="fade-in" class="input-group mb-3" style="align-items: center; justify-content: center; margin-top: 1rem;">
         <input type="text" class="form-control" style="max-width: 25%;" placeholder="Enter link" aria-label="Recipient's username" aria-describedby="button-addon2">

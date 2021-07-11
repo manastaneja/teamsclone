@@ -13,6 +13,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://kit.fontawesome.com/67e4f2d0dd.js" crossorigin="anonymous"></script>
     <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <script type="text/JavaScript" src="https://MomentJS.com/downloads/moment-with-locales.js"></script>
     <script>
         const room_id = "<%= roomID %>"
         const username = "<%= currentUser.username %>"
@@ -90,6 +91,7 @@
         <div class="right-header">Chat</div>
         <!-- <hr> -->
         <audio src="sounds/message.mp3" id="message-sound"></audio>
+        <audio src="sounds/leave_call.mp3" id="leavecall-sound"></audio>
         <div class="chat-window">
             <ul class="messages">
 

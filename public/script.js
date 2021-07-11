@@ -3,7 +3,7 @@ const videoGrid = document.getElementById('video-grid');
 const myPeer = new Peer(undefined, {
     path: '/peerjs',
     host: '/',
-    port: '3030'
+    port: process.env.PORT || 3030
 })
 // const myPeer = new Peer();
 //LIVE TIME
@@ -71,7 +71,8 @@ navigator.mediaDevices.getUserMedia({
 
     //CHAT 
     function appendMessages(message) {
-        const html = `<li class = "message"><b>${message.username.toUpperCase()}</b><br>${message.text}</li>`
+        const html = `<div class="messagediv"><li class = "message"><b>${message.text}</b>
+                            <br>${message.username}<br><small class="text-muted">${message.timemoment.substring(12)}</small></li></div>`
         $('ul').append(html);
     }
     socket.on('output-messages', data => {
@@ -89,17 +90,19 @@ navigator.mediaDevices.getUserMedia({
         if((e.which == 13 && msg.val().length!==0)){
             // console.log(msg.val());
             // msg1 = `${username}` + msg.val();
-            
-            socket.emit('message', msg.val(), username);
+            const timeFromMoment = moment();
+            // var testDateUtc = moment.utc();
+            // var localDate = moment(testDateUtc).local();
+            socket.emit('message', msg.val(), username, timeFromMoment);
             msg.val('');
             message_sound();
         }
     })
-
     
-    socket.on('createMessage', (message, username)=>{
+    socket.on('createMessage', (message, username, timeFromMoment)=>{
         // console.log('this is from server', message);
-        $('ul').append(`<li class = "message"><b>${username.toUpperCase()}</b><br>${message}</li>`);
+        $('ul').append(`<div class="messagediv"><li class = "message"><b>${message}</b><br>sent by ${username}<br>
+                                    <small class="text-muted">${timeFromMoment.substring(11)}</small></li></div>`);
         scrollBottom();
     })
     // socket.on('user-connected', userID => {
@@ -120,6 +123,7 @@ navigator.mediaDevices.getUserMedia({
 //     location.href = "/home";
 // })
 const leaveMeet = () => {
+    // document.getElementById("message-sound").play();
     socket.emit('disconnectTheUser', room_id, userID);
     location.href = "/exit";
     

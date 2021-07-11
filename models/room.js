@@ -5,7 +5,8 @@ var roomSchema = new mongoose.Schema({
 	// roomId:String,
     messages:[{
         text:String,
-        username:String
+        username:String,
+        timemoment:String
     }]
 });
 

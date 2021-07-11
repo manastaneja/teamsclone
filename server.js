@@ -9,7 +9,7 @@ const passport = require("passport");
 const expressSanitizer = require("express-sanitizer");
 const LocalStrategy = require("passport-local");
 const mongoose = require("mongoose");
-
+const moment = require('moment');
 const User = require("./models/user.js");
 const Room = require("./models/room");
 
@@ -205,9 +205,9 @@ io.on('connection', socket =>{
 			console.log("hi");
 			console.log(roomID);
 			// socket.emit('output-messages', room.messages);
-			setTimeout(()=>{io.to(roomID).emit('output-messages', room.messages)}, 2000);
+			setTimeout(()=>{socket.emit('output-messages', room.messages)}, 2000);
 		})
-        socket.on('message', (message, username)=>{
+        socket.on('message', (message, username, timeFromMoment)=>{
 			// Room.findById(roomID).then((room)=>{
 			// 	// console.log("hi");
 			// 	socket.emit('output-messages', room.messages);
@@ -216,10 +216,10 @@ io.on('connection', socket =>{
 				if(err){
 					console.log(err);
 				}else{
-					const newMsg = {text:message, username:username};
+					const newMsg = {text:message, username:username, timemoment:timeFromMoment};
 					room.messages.push(newMsg);
 					room.save().then(()=>{
-						io.to(roomID).emit('createMessage', message, username);
+						io.to(roomID).emit('createMessage', message, username, timeFromMoment);
 					})
 				}
 			})
@@ -237,4 +237,4 @@ io.on('connection', socket =>{
     
 })
 
-server.listen(3030);
+server.listen(process.env.PORT || 3030);

@@ -17,6 +17,8 @@
     "express-sanitizer": "^1.0.6",
     "express-session": "^1.17.2",
     "firebase": "^8.7.0",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
     "mongoose": "^5.13.2",
     "nodemon": "^2.0.9",
     "passport": "^0.4.1",

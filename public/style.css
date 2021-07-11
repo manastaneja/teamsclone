@@ -61,6 +61,17 @@ body{
     border: none;
     color: #F5F5F5;
 }
+.messagediv{
+    color: #4b5458;
+    background-color: #ffd9d9;
+    border: 0.1px black solid;
+    border-radius: 5px;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    padding: 2px 2px 2px 5px;
+    font-family: (sans-serif, Arial, Helvetica, sans-serif);
+}
 .main-videos{
     flex-grow: 1;
     background-color: black;
@@ -139,6 +150,7 @@ video{
 }
 ul{
 list-style-type: none;
+padding: 0;
 }
 .live-time{
     font-size: 2rem;
