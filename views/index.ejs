@@ -52,7 +52,7 @@
         <%}else{%>
           <a class="nav-item nav-link" href="/logout">Logout</a>
         <%}%>
-      </div>
+      </div> 
     </div>
   <!-- </div> -->
   </nav>
@@ -66,15 +66,17 @@
           <span aria-hidden="true">&times;</span>
         </button> -->
       </div>
+      <form action="/join" method = "POST">
       <div class="modal-body">
-        <input type="text" class="form-control roomLinkJoin" placeholder="Enter room link" aria-label="Recipient's username" aria-describedby="button-addon2">
+        <input type="text" name = "url" class="form-control roomLinkJoin" placeholder="Enter room link" aria-label="Recipient's username" aria-describedby="button-addon2">
         <!-- <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="background-color: #7cc576; color: white;">JOIN</button> -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <!-- <button type="button" class="btn btn-primary" onclick="sendMail()">Send Invite</button> -->
-        <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="background-color: #7cc576; color: white;">JOIN</button>
+        <button class="btn btn-outline-secondary" id="button-addon2" style="background-color: #7cc576; color: white;">JOIN</button>
       </div>
+      </form>
     </div>
   </div>
 </div>
@@ -85,8 +87,10 @@
       <h1 data-aos="zoom-in">Welcome To MS Teams</h1>
       <h2 data-aos="fade-in">connecting the world</h2>
       <div class="buttons-box">
-        <a data-aos="fade-in" data-aos-delay="200" href="./" class="btn-get-started" style="text-decoration: none;">Create Room</a>
-        <a data-aos="fade-in" data-aos-delay="200" href="" style="text-decoration: none;" class="btn-get-started" data-toggle="modal" data-target="#exampleModalCenter">Join Room</a>
+        <a data-aos="fade-in" data-aos-delay="200" href="/room" class="btn-get-started" style="text-decoration: none;">Create Room</a>
+        <%if(currentUser){%>
+          <a data-aos="fade-in" data-aos-delay="200" href="" style="text-decoration: none;" class="btn-get-started join" data-toggle="modal" data-target="#exampleModalCenter">Join Room</a>
+        <%}%>      
       </div>
       <!-- <div data-aos="fade-in" class="input-group mb-3" style="align-items: center; justify-content: center; margin-top: 1rem;">
         <input type="text" class="form-control" style="max-width: 25%;" placeholder="Enter link" aria-label="Recipient's username" aria-describedby="button-addon2">

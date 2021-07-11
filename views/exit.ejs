@@ -29,12 +29,35 @@
 </head>
 
 <body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- <div> -->
+    <a class="navbar-brand" href="#" style="padding-left: 2rem;">Teams</a>
+    <!-- </div> -->
+    <!-- <div> -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button> 
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link" href="/home">Home</a>
+        <%if(currentUser){%>
+          <a class="nav-item nav-link active" href="/chat">Chat</a>
+        <%}%>
+        <%if(!currentUser){%>
+          <a class="nav-item nav-link" href="/login">Login</a>
+        <%}else{%>
+          <a class="nav-item nav-link" href="/logout">Logout</a>
+        <%}%>
+      </div>
+    </div>
+  <!-- </div> -->
+  </nav>
   <!-- ======= Hero Section ======= -->
-  <section id="hero">
+  <section id="hero" style="height: 90.8vh;">
     <div class="hero-container">
       <h1 data-aos="fade-in">You've left the Meeting</h1>
       <div class="buttons-box">
-        <a data-aos="fade-in" data-aos-delay="200" href="" class="btn-get-started">Re-join the Meeting</a>
+        <a data-aos="fade-in" data-aos-delay="200" href="javascript:history.back()" class="btn-get-started">Re-join the Meeting</a>
         <a data-aos="fade-in" data-aos-delay="200" href="/chat" class="btn-get-started">Chats</a>
         </div>
       <!-- <a data-aos="fade-in" data-aos-delay="200" href="" class="btn-get-started">Re-join the Meeting</a> -->

@@ -50,13 +50,19 @@ app.use(function(req,res,next){
 	next();
 })
 const isLoggedIn = function(req,res,next){
-	if(req.isAuthenticated()){
-		return next()
-	}else{
+	if(!req.isAuthenticated() || !req.isAuthenticated){
+		if(req.session){
+			req.session.redirectUrl = req.headers.referer || req.originalUrl || req.url;
+		}
 		res.redirect('/login');
+	}else{
+		next();
 	}
 }
-app.get('/', isLoggedIn ,(req, res) => {
+app.get('/', (req, res)=>{
+	res.redirect('/home');
+})
+app.get('/room', isLoggedIn ,(req, res) => {
 	const uid = uuidv4();
     res.redirect(`/${uid.substring(0, 12)}`);
 })
@@ -100,10 +106,14 @@ app.get("/chat/:id", (req, res)=>{
 		}
 	})	
 })
-app.get("/history", (req, res)=>{
+app.post('/join', (req, res)=>{
+	var url = req.body.url;
+	res.redirect("/"+url);
+})
+app.get("/history", isLoggedIn, (req, res)=>{
 	res.render("history");
 })
-app.get("/exit",(req,res) => {
+app.get("/exit",isLoggedIn, (req,res) => {
 	res.render("exit");
 });
 
@@ -141,11 +151,13 @@ app.get("/login",(req,res) => {
 app.post("/login",passport.authenticate("local",{
 		failureRedirect:"/home"
 	}),(req,res) => {
+		User.findById(req.user._id);
+		var redirectionUrl = req.session.redirectUrl || '/home';
 		// const uid = uuidv4().splice(0, 5);
-    	res.redirect("/");
+    	res.redirect(redirectionUrl);
         // res.redirect(`/${uuidv4()}`);
 });
-app.get("/chat", (req, res)=>{
+app.get("/chat", isLoggedIn, (req, res)=>{
 	res.render("chat");
 })
 //LOGOUT ROUTES

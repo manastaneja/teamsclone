@@ -12,20 +12,43 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </head>
 <body style="background-color: rgb(231, 212, 212);">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- <div> -->
+    <a class="navbar-brand" href="#">Teams</a>
+    <!-- </div> -->
+    <!-- <div> -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button> 
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
+        <%if(currentUser){%>
+          <a class="nav-item nav-link active" href="/chat">Chat</a>
+        <%}%>
+        <%if(!currentUser){%>
+          <a class="nav-item nav-link" href="/login">Login</a>
+        <%}else{%>
+          <a class="nav-item nav-link" href="/logout">Logout</a>
+        <%}%>
+      </div>
+    </div>
+  <!-- </div> -->
+  </nav>
     <div class="container py-3 px-5">
         <!-- For demo purpose-->
         <header class="text-center">
         </header>
       
-        <div class="row rounded-lg overflow-hidden shadow">
+        <div class="row rounded-lg shadow">
           
           <!-- Chat Box-->
           <div class="col-12 px-0">
-            <div class="bg-gray px-4 py-2 bg-light" style="display: flex; justify-content: space-between;">
+            <div class="bg-gray px-4 py-2" style="display: flex; justify-content: space-between; background-color: #e6e6e6;">
                 <span class="h5 mb-0 py-1">Room ID -> <%=room._id%></span>
-                <span class="h5 mb-0 py-1"><a href="/<%=room._id%>" style="text-decoration: none;">Join Room</a></span>
+                <span class="h5 mb-0 py-1"><a href="/<%=room._id%>" style="text-decoration: none;" class="btn btn-dark">Join Room</a></span>
               </div>
-            <div class="px-4 py-5 chat-box bg-white" style="height: 450px; overflow-y: scroll;">  
+            <div class="px-4 py-5 chat-box bg-white" style="height: 410px; overflow-y: scroll;">  
               <%room.messages.forEach((message)=>{%>
                 <div class="media w-50 ml-auto mb-3">
                     <div class="media-body">
@@ -39,12 +62,12 @@
             </div>
       
             <!-- Typing area -->
-            <form action="#" class="bg-light">
+            <form action="#" style = "background-color: #e6e6e6;">
               <div class="input-group">
                 <input type="text" placeholder="Type a message" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light">
-                <div class="input-group-append">
+                <!-- <div class="input-group-append">
                   <button id="button-addon2" type="submit" class="btn btn-link"> <i class="fa fa-paper-plane"></i></button>
-                </div>
+                </div> -->
               </div>
             </form>
       
