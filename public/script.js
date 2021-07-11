@@ -306,7 +306,7 @@ const sendMail = () => {
         Subject: "Teams Meeting Invite",
         Body: `<h2>Hey!
         You've been invited to this meeting.<br>
-        Click on the link to join now : http://localhost:3030/${room_id} <br>
+        Click on the link to join now : https://myteamsapp.herokuapp.com/${room_id} <br>
         <b>From: ${username.toUpperCase()} </b></h2>`,
       })
         .then(function (message) {
