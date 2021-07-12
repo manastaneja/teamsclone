@@ -33,7 +33,6 @@ participants.push(username);
 let userID;
 myPeer.on('open', id=>{
     userID = id;
-    console.log("My Id: ", id);
     socket.emit('join-room', room_id, id, username);
 })
 navigator.mediaDevices.getUserMedia({
@@ -57,7 +56,7 @@ navigator.mediaDevices.getUserMedia({
     })
     socket.on('user-disconnected', (userID, username) => {
         // setTimeout(()=>{console.log("disconnected....")}, 6000);
-        console.log("disconnected....");
+        // console.log("disconnected....");
         participants.includes(username) && participants.splice(participants.indexOf(username),1);
         if(peers[userID]) peers[userID].close();
         // participants.indexOf().splice();
@@ -75,7 +74,7 @@ navigator.mediaDevices.getUserMedia({
         $('ul').append(html);
     }
     socket.on('output-messages', data => {
-        console.log(data)
+        // console.log(data)
         if (data.length) {
             data.forEach(message => {
                 appendMessages(message)
@@ -188,7 +187,7 @@ const removePartiList = () => {
 //     connectToNewUser(userID, stream);
 // })
 const connectToNewUser = (userID, stream, username) =>{
-    console.log("new user", userID);
+    // console.log("new user", userID);
     const call = myPeer.call(userID, stream)
     const video = document.createElement('video')
     // video.setAttribute("poster","https://images.unsplash.com/photo-1543946207-39bd91e70ca7?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8ZnVsbCUyMGhkJTIwd2FsbHBhcGVyfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80");
