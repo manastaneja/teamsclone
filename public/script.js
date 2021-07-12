@@ -53,7 +53,7 @@ navigator.mediaDevices.getUserMedia({
       })
     //adding the call of the new user to the stream
     socket.on('user-connected', (userID, username) => {
-        setTimeout(()=>{connectToNewUser(userID, stream, username)}, 1500);
+        setTimeout(()=>{connectToNewUser(userID, stream, username)}, 2000);
     })
     socket.on('user-disconnected', (userID, username) => {
         // setTimeout(()=>{console.log("disconnected....")}, 6000);
