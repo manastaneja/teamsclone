@@ -28,11 +28,13 @@ let myVideoStream
 const myVideo = document.createElement('video');
 myVideo.muted = true // change
 const peers = {};
+const participants = [];
+participants.push(username);
 let userID;
 myPeer.on('open', id=>{
     userID = id;
     console.log("My Id: ", id);
-    socket.emit('join-room', room_id, id);
+    socket.emit('join-room', room_id, id, username);
 })
 navigator.mediaDevices.getUserMedia({
     video: true,
@@ -50,13 +52,15 @@ navigator.mediaDevices.getUserMedia({
         // console.log("I am added");
       })
     //adding the call of the new user to the stream
-    socket.on('user-connected', userID => {
-        setTimeout(()=>{connectToNewUser(userID, stream)}, 1500);
+    socket.on('user-connected', (userID, username) => {
+        setTimeout(()=>{connectToNewUser(userID, stream, username)}, 1500);
     })
-    socket.on('user-disconnected', userID => {
+    socket.on('user-disconnected', (userID, username) => {
         // setTimeout(()=>{console.log("disconnected....")}, 6000);
         console.log("disconnected....");
+        participants.includes(username) && participants.splice(participants.indexOf(username),1);
         if(peers[userID]) peers[userID].close();
+        // participants.indexOf().splice();
         // if (document.getElementById(userID)) {
         //     document.getElementById(userID).remove();
         // }
@@ -67,8 +71,7 @@ navigator.mediaDevices.getUserMedia({
 
     //CHAT 
     function appendMessages(message) {
-        const html = `<div class="messagediv"><li class = "message"><b>${message.text}</b>
-                            <br>${message.username}<br><small class="text-muted">${message.timemoment.substring(12)}</small></li></div>`
+        const html = `<div class="messagediv" style="word-break: break-all;"><li class = "message"><div class = "message_head"><b>${message.text}</b></div>sent by ${message.username}<br><small class="text-muted">${message.timemoment.substring(12)}</small></li></div>`
         $('ul').append(html);
     }
     socket.on('output-messages', data => {
@@ -97,8 +100,7 @@ navigator.mediaDevices.getUserMedia({
     
     socket.on('createMessage', (message, username, timeFromMoment)=>{
         // console.log('this is from server', message);
-        $('ul').append(`<div class="messagediv"><li class = "message"><b>${message}</b><br>sent by ${username}<br>
-                                    <small class="text-muted">${timeFromMoment.substring(11)}</small></li></div>`);
+        $('ul').append(`<div class="messagediv" style="word-break: break-all;"><li class = "message"><div class = "message_head"><b>${message}</b></div>sent by ${username}<br><small class="text-muted">${timeFromMoment.substring(11)}</small></li></div>`);
         scrollBottom();
     })
     // socket.on('user-connected', userID => {
@@ -120,14 +122,34 @@ navigator.mediaDevices.getUserMedia({
 // })
 const leaveMeet = () => {
     // document.getElementById("message-sound").play();
-    socket.emit('disconnectTheUser', room_id, userID);
+    socket.emit('disconnectTheUser', room_id, userID, username);
     location.href = "/exit";
     
     // socket.disconnect(); 
     // location.href = "/exit";
     // socket.close();
-   
 }
+const showParticipants = () => {
+    let pbody = $(".participantsModalBody");
+    let i = 0;
+    for(i; i<participants.length; i++){
+        const name = participants[i];
+        const phtml =  `<br>${i+1}. ${name.toUpperCase()}`;
+        pbody.append(phtml);
+    }
+}
+const removePartiList = () => {
+    let pbody = $(".participantsModalBody");
+    pbody.empty();
+}
+// var ignoreClickOnMeElement = document.getElementById('partidiv');
+// document.addEventListener('click', function(event) {
+//     var isClickInsideElement = ignoreClickOnMeElement.contains(event.target);
+//     if (!isClickInsideElement) {
+//         let pbody = $(".participantsModalBody");
+//         pbody.empty();
+//     }
+// });
 // const leaveMeet = () => {
 //     console.log('leave meeting')
 //     socket.emit("disconnect", room_id, userID);
@@ -165,7 +187,7 @@ const leaveMeet = () => {
 // socket.on('user-connected', (userID) => {
 //     connectToNewUser(userID, stream);
 // })
-const connectToNewUser = (userID, stream) =>{
+const connectToNewUser = (userID, stream, username) =>{
     console.log("new user", userID);
     const call = myPeer.call(userID, stream)
     const video = document.createElement('video')
@@ -178,6 +200,7 @@ const connectToNewUser = (userID, stream) =>{
         video.remove();
     })
     peers[userID] = call
+    participants.push(username);
 }
 // const connectToNewUserRemoveVideo = (userID, stream) => {
 //     const call = myPeer.call(userID, stream)
@@ -260,12 +283,12 @@ const openCloseChat = () => {
         videoContent.style.transition = 'flex 0.5s ease-in-out';
         content.style.transition = 'margin 0.5s ease-in-out';
         content.style.margin = "0% -20% 0% 0%";
-        videoContent.style.flex = 0.85;
+        videoContent.style.flex = 1;
     
     } else{
         videoContent.style.transition = 'flex 0.5s ease-in-out'; 
         content.style.transition = 'margin 0.5s ease-in-out';
-        videoContent.style.flex = 0.65;
+        videoContent.style.flex = 0.85;
         content.style.margin = "0% 0% 0% 0%";        
     }
 }

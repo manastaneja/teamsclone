@@ -21,17 +21,22 @@
 </head>
 <body>
 <div class="main">
-  <!-- Modal -->
+  <!-- Modal FOR ADD PEOPLE-->
   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document" style="width: 350px;">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="modal-title" id="exampleModalLongTitle">Add People</h2>
+          <h2 class="modal-title" id="exampleModalLongTitle" style="text-align: center;">Add People</h2>
           <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button> -->
         </div>
-        <div class="modal-body">
+        <div class="modal-body" >
+            <!-- <div style = "height: 300px; width: 300px; margin: 1rem 2rem 2rem 2rem;" class="d-flex justify-content-center align-items-center"> -->
+                
+            <div style = "margin: 3rem 2rem 5rem 2rem;" class="add_people_imgdiv">
+                <img src="/images/add_people.png" class = "img-fluid" style="width: 250px; height: 200px; flex-grow: 1;" alt="">
+            </div>
             <form>
                 <div class="form-group">
                   <!-- <label for="recipient-name" class="col-form-label">Enter Email ID</label> -->
@@ -46,6 +51,23 @@
       </div>
     </div>
   </div>
+  <!-- MODAL ENDS -->
+  <!-- Participants modal -->
+  <div class="modal fade" id="pmodal" tabindex="-1" role="dialog" aria-labelledby="pmodalTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document" style="width: 350px;">
+      <div class="modal-content" id = "partidiv">
+        <div class="modal-header">
+          <h2 class="modal-title" id="exampleModalLongTitle" style="text-align: center;">Participants<br><small>(click on close to exit)</small></h2>
+        </div>
+        <div class="modal-body participantsModalBody">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="removePartiList()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ends here modal -->
     <div class="main-left">
         <div class="main-videos">
             <div id = "video-grid">
@@ -68,6 +90,12 @@
                 <div class="controls-button chat_button" onclick="openCloseChat()">
                     <i class="fas fa-comment-dots"></i>                
                 </div>
+                <!-- <div class="controls-button showParticipantsButton" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="showParticipants()">
+                    <i class="fas fa-users"></i>               
+                </div> -->
+                <div class="controls-button showParticipantsButton" data-toggle="modal" data-target="#pmodal" onclick="showParticipants()">
+                    <i class="fas fa-users"></i>               
+                </div>
                 <div class="controls-button addPeopleButton" data-toggle="modal" data-target="#exampleModalCenter" onclick="addPeople()">
                     <i class="fas fa-user-plus"></i>                
                 </div>
@@ -82,11 +110,11 @@
             </div>
         </div>
     </div>    
-    
+<!--     
     <div class = "main-middle">
         <div class="middle-header">Participants</div>
     </div>
-    
+     -->
     <div class = "main-right">
         <div class="right-header">Chat</div>
         <!-- <hr> -->

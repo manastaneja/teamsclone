@@ -9,13 +9,18 @@ body{
     overflow-y: hidden;
 }
 .main-left{
-    flex: 0.65;
+    /* flex: 0.65; */
+    flex: 0.80;
     display: flex;
     flex-direction: column;
 }
-.main-middle{
+/* .main-middle{
     flex: 0.15;
     /* display: none; */
+/* } */ 
+.participantsModalBody{
+    margin-bottom: 2rem;
+    font-size: 2rem;
 }
 .main-right{
     flex: 0.2;
@@ -51,6 +56,12 @@ body{
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+  .message_head{
+      font-size: 15px;
+  }
+.message{
+    padding: 0.5rem;
+}
 .message-container{
     display: flex;
     padding: 8px 2px;
@@ -79,6 +90,10 @@ body{
     justify-content: center;
     align-items: center;
     
+}
+.add_people_imgdiv{
+    display: flex;
+    justify-content: left;
 }
 /* #video-grid{
     justify-content: center;

@@ -205,14 +205,16 @@ app.get('/:room', isLoggedIn, (req, res) => {
 
 io.on('connection', socket =>{
 	
-    socket.on('join-room', (roomID, userID) => {
+    socket.on('join-room', (roomID, userID, username) => {
         socket.join(roomID);
 		// Room.findById(roomID).then((room)=>{
 		// 	console.log("hi");
 		// 	socket.emit('output-messages', room.messages);
 		// })
 		
-        socket.broadcast.to(roomID).emit('user-connected', userID); 
+        // socket.broadcast.to(roomID).emit('user-connected', userID);
+        socket.broadcast.to(roomID).emit('user-connected', userID, username); 
+
 		Room.findById(roomID).then((room)=>{
 			console.log("hi");
 			console.log(roomID);
@@ -238,14 +240,30 @@ io.on('connection', socket =>{
             
         })
 
-        socket.on('disconnectTheUser', (roomID, userID)=>{
-			socket.broadcast.to(roomID).emit('user-disconnected', userID);
+        socket.on('disconnectTheUser', (roomID, userID, username)=>{
+			socket.broadcast.to(roomID).emit('user-disconnected', userID, username);
             // setTimeout(()=>{socket.broadcast.to(roomID).emit('user-disconnected', userID)}, 6000);
 			// console.log('disconnected!', roomID, userID); 
 			// setTimeout(()=>{io.to(roomID).emit('user-disconnected', userID)}, 6000); 
 			// io.to(roomID).emit('user-disconnected', userID);
         })
     })
+	// socket.on('join-chat-room', (chatroomid)=>{
+	// 	socket.join(chatroomid);
+	// 	socket.on("chathistory-message", (message, chatusername, timeFromMomentHistory)=>{
+	// 		Room.findById(chatroomid, function(err, room){
+	// 			if(err){
+	// 				console.log(err);
+	// 			}else{
+	// 				const newMsg = {text:message, username:chatusername, timemoment:timeFromMomentHistory};
+	// 				room.messages.push(newMsg);
+	// 				room.save().then(()=>{
+	// 					io.to(chatroomid).emit('createMessage', message, username, timeFromMoment);
+	// 				})
+	// 			}
+	// 		})
+	// 	})
+	// })
     
 })
 
