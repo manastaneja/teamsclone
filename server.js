@@ -108,7 +108,20 @@ app.get("/chat/:id", (req, res)=>{
 })
 app.post('/join', (req, res)=>{
 	var url = req.body.url;
-	res.redirect("/"+url);
+	Room.findById(url, function(err, room){ 
+		if(err){
+			console.log(err);
+		} 
+		else{
+			if(room!=null){
+				res.redirect("/"+url);
+			} else{
+				// console.log("Enter valid code");
+				res.redirect("/home");
+			}	
+		}
+	})	
+
 })
 app.get("/history", isLoggedIn, (req, res)=>{
 	res.render("history");
@@ -184,12 +197,15 @@ app.get('/:room', isLoggedIn, (req, res) => {
 									// req.flash("error","Something went wrong!");
 									console.log(err);
 								}else{
+									// room.participantsArray.push(req.user.username);
 									room.save();
 									user.rooms.push(room);
 									user.save();
 								}
 							})
 						}else{
+							// room.participantsArray.push(req.user.username);
+							// room.save();
 							user.rooms.push(room);
 							user.save();
 						}
@@ -213,6 +229,20 @@ io.on('connection', socket =>{
 		// })
 		
         // socket.broadcast.to(roomID).emit('user-connected', userID);
+		
+		//ADD THE USERNAME TO PARTICIPANT SCHEMA
+		// var newPart = {_id:username};
+		// Participant.create(newPart ,function(err,parti){
+		// 	if(err){
+		// 		// req.flash("error","Something went wrong!");
+		// 		console.log(err);
+		// 	}else{
+		// 		console.log("new partici created");
+		// 		parti.save();
+		// 	}
+		// })
+		// //
+
         socket.broadcast.to(roomID).emit('user-connected', userID, username); 
 
 		Room.findById(roomID).then((room)=>{
@@ -241,6 +271,9 @@ io.on('connection', socket =>{
         })
 
         socket.on('disconnectTheUser', (roomID, userID, username)=>{
+			// REMOVE THE USERNAME FROM THE PARTICIPANT SCHEMA
+
+			//
 			socket.broadcast.to(roomID).emit('user-disconnected', userID, username);
             // setTimeout(()=>{socket.broadcast.to(roomID).emit('user-disconnected', userID)}, 6000);
 			// console.log('disconnected!', roomID, userID); 

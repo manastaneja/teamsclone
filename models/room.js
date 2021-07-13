@@ -7,6 +7,9 @@ var roomSchema = new mongoose.Schema({
         text:String,
         username:String,
         timemoment:String
+    }],
+    participantsArray:[{
+        name: String
     }]
 });
 
