@@ -28,8 +28,8 @@ let myVideoStream
 const myVideo = document.createElement('video');
 myVideo.muted = true // change
 const peers = {};
-const participants = [];
-participants.push(username);
+const participantsarray = [];
+// participants.push(username);
 let userID;
 myPeer.on('open', id=>{
     userID = id;
@@ -57,11 +57,11 @@ navigator.mediaDevices.getUserMedia({
     socket.on('user-disconnected', (userID, username) => {
         // setTimeout(()=>{console.log("disconnected....")}, 6000);
         // console.log("disconnected....");
-        participants.includes(username) && participants.splice(participants.indexOf(username),1);
+        participantsarray.includes(username) && participantsarray.splice(participantsarray.indexOf(username),1);
         if(peers[userID]) peers[userID].close();
         // participants.indexOf().splice();
         // if (document.getElementById(userID)) {
-        //     document.getElementById(userID).remove();
+            // document.getElementById(userID).remove();
         // }
         // delete peers[userID];
         // connectToNewUser(userID, stream);
@@ -128,19 +128,19 @@ const leaveMeet = () => {
     // location.href = "/exit";
     // socket.close();
 }
-const showParticipants = () => {
-    let pbody = $(".participantsModalBody");
-    let i = 0;
-    for(i; i<participants.length; i++){
-        const name = participants[i];
-        const phtml =  `<br>${i+1}. ${name.toUpperCase()}`;
-        pbody.append(phtml);
-    }
-}
-const removePartiList = () => {
-    let pbody = $(".participantsModalBody");
-    pbody.empty();
-}
+// const showParticipants = () => {
+//     let pbody = $(".participantsModalBody");
+//     let i = 0;
+//     for(i; i<participants.length; i++){
+//         const name = participants[i];
+//         const phtml =  `<br>${i+1}. ${name.toUpperCase()}`;
+//         pbody.append(phtml);
+//     }
+// }
+// const removePartiList = () => {
+//     let pbody = $(".participantsModalBody");
+//     pbody.empty();
+// }
 // var ignoreClickOnMeElement = document.getElementById('partidiv');
 // document.addEventListener('click', function(event) {
 //     var isClickInsideElement = ignoreClickOnMeElement.contains(event.target);
@@ -199,7 +199,7 @@ const connectToNewUser = (userID, stream, username) =>{
         video.remove();
     })
     peers[userID] = call
-    participants.push(username);
+    participantsarray.push(username);
 }
 // const connectToNewUserRemoveVideo = (userID, stream) => {
 //     const call = myPeer.call(userID, stream)
@@ -303,6 +303,30 @@ const shareScreen = async () => {
     myPeer.call(myUserId, captureStream);
   };
 
+  const showParticipants = () => {
+    let pbody = $(".participantsModalBody");
+    // parray.forEach(function(participant){
+    //     console.log(participant);
+    //     const phtml = `${participant}`;
+    //     pbody.append(phtml);
+    // })
+    let j = 0;
+    for(j; j<parray.length; j++){
+        const participant = parray[j];
+        const phtml = `${participant}`;
+        pbody.append(phtml);
+    }
+    let i = 0;
+    for(i; i<participantsarray.length; i++){
+        const name = participantsarray[i];
+        const mhtml =  `${name}`;
+        pbody.append(mhtml);
+    }
+}
+const removePartiList = () => {
+    let pbody = $(".participantsModalBody");
+    pbody.empty();
+}
 // var e = document.querySelector('.chat_button');
 //  e.onmouseover = function() {
 //    document.querySelector('.chat_popup').style.display = 'block';

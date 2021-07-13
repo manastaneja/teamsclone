@@ -12,7 +12,7 @@ const mongoose = require("mongoose");
 const moment = require('moment');
 const User = require("./models/user.js");
 const Room = require("./models/room");
-
+const mongouri = process.env.MONGODB_URI;
 const peerServer = ExpressPeerServer(server, {
   debug: true
 });
@@ -20,10 +20,18 @@ app.use(require('cors')())
 const { v4: uuidv4} = require('uuid');
 const { WSAETIMEDOUT } = require('constants');
 
-mongoose.connect('mongodb+srv://neha:NehaGoyal@123@cluster0.vqfk9.mongodb.net/msteams?retryWrites=true&w=majority', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+// mongoose.connect(mongouri, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true
+// })
+// mongoose.connect('mongodb+srv://neha:NehaGoyal@123@cluster0.vqfk9.mongodb.net/msteams?retryWrites=true&w=majority', {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true
+// })
+mongoose.connect(mongouri, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true
+  })
 .then(() => console.log('Connected to DB!'))
 .catch(error => console.log(error.message));
 
@@ -197,17 +205,19 @@ app.get('/:room', isLoggedIn, (req, res) => {
 									// req.flash("error","Something went wrong!");
 									console.log(err);
 								}else{
-									// room.participantsArray.push(req.user.username);
+									room.participants.push(req.user.username);
 									room.save();
 									user.rooms.push(room);
 									user.save();
+									res.render('myroom', {roomID: req.params.room, room:room});
 								}
 							})
 						}else{
-							// room.participantsArray.push(req.user.username);
-							// room.save();
+							room.participants.push(req.user.username);
+							room.save();
 							user.rooms.push(room);
 							user.save();
+							res.render('myroom', {roomID: req.params.room, room:room});
 						}
 					}
 				})
@@ -216,13 +226,13 @@ app.get('/:room', isLoggedIn, (req, res) => {
 			
 		}
 	})
-	res.render('myroom', {roomID: req.params.room});
 })
 
 io.on('connection', socket =>{
 	
     socket.on('join-room', (roomID, userID, username) => {
-        socket.join(roomID);
+        
+		socket.join(roomID);
 		// Room.findById(roomID).then((room)=>{
 		// 	console.log("hi");
 		// 	socket.emit('output-messages', room.messages);

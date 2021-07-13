@@ -8,8 +8,8 @@ var roomSchema = new mongoose.Schema({
         username:String,
         timemoment:String
     }],
-    participantsArray:[{
-        name: String
+    participants:[{
+        type: String
     }]
 });
 

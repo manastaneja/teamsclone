@@ -17,6 +17,7 @@
     <script>
         const room_id = "<%= roomID %>"
         const username = "<%= currentUser.username %>"
+        const parray = "<%= room.participants%>"
     </script>
 </head>
 <body>
@@ -60,8 +61,10 @@
           <h2 class="modal-title" id="exampleModalLongTitle" style="text-align: center;">Participants<br><small>(click on close to exit)</small></h2>
         </div>
         <div class="modal-body participantsModalBody">
+          
         </div>
         <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
           <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="removePartiList()">Close</button>
         </div>
       </div>
@@ -94,7 +97,8 @@
                     <i class="fas fa-users"></i>               
                 </div> -->
                 <div class="controls-button showParticipantsButton" data-toggle="modal" data-target="#pmodal" onclick="showParticipants()">
-                    <i class="fas fa-users"></i>               
+                <!-- <div class="controls-button showParticipantsButton" data-toggle="modal" data-target="#pmodal"> -->
+                  <i class="fas fa-users"></i>               
                 </div>
                 <div class="controls-button addPeopleButton" data-toggle="modal" data-target="#exampleModalCenter" onclick="addPeople()">
                     <i class="fas fa-user-plus"></i>                
